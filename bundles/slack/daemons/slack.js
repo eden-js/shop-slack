@@ -40,6 +40,9 @@ class SlackDaemon extends Daemon {
    * builds rentlar slack daemon
    */
   async build() {
+    // return no token
+    if (!config.get('slack.bot.token')) return;
+
     // load bot
     this.__bot = new Bot({
       name  : config.get('slack.bot.name'),
@@ -47,8 +50,8 @@ class SlackDaemon extends Daemon {
     });
 
     // bind eden listeners
-    this.eden.endpoint('slack.post', this.postCreate, true);
     this.eden.endpoint('slack.user', this.postUser, true);
+    this.eden.endpoint('slack.post', this.postCreate, true);
     this.eden.endpoint('slack.channel', this.postChannel, true);
   }
 

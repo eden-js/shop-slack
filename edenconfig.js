@@ -3,7 +3,10 @@ const config = {};
 
 // default company config
 config.slack = {
-  sales : {},
+  bot   : {},
+  sales : {
+    channel : 'sales',
+  },
 };
 
 // export config

@@ -15,8 +15,8 @@ class SlackHelper extends Helper {
 
     // bind methods
     this.user = this.user.bind(this);
+    this.post = this.post.bind(this);
     this.channel = this.channel.bind(this);
-    this.message = this.message.bind(this);
   }
 
   /**
