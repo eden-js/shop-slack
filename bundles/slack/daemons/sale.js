@@ -61,16 +61,16 @@ class SlackSaleDaemon extends Daemon {
         value : order.get('created_at').toLocaleString(),
       }, {
         title : 'Name',
-        value : user.get('email') || user.get('username'),
+        value : user ? `${user.name() || user.get('username') || user.get('email')}` : config.get('address.name'),
       }, {
         title : 'Amount',
-        value : `$${invoice.get('total').toFixed(2)} USD`,
+        value : `$${invoice.get('total').toFixed(2)} ${config.get('shop.currency') || 'USD'}`,
       }, {
         title : 'Method',
         value : payment ? payment.get('method.type') : 'N/A',
       }, {
         title : 'Discount',
-        value : `$${(invoice.get('discount') || 0).toFixed(2)} USD`,
+        value : `$${(invoice.get('discount') || 0).toFixed(2)} ${config.get('shop.currency') || 'USD'}`,
       }];
 
       // push line items
