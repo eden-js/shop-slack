@@ -2,7 +2,9 @@
   "name": "@edenjs/shop-slack",
   "description": "nothing yet",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "slackbots": "^1.2.0"
+  },
   "engines": {
     "node": ">= 8.0.0"
   },
