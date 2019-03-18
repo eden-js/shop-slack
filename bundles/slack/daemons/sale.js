@@ -137,7 +137,7 @@ class SlackSaleDaemon extends Daemon {
    */
   async sendSubscription(subscription, type, color) {
     // return no token
-    if (!config.get('slack.bot.token')) return;
+    if (!config.get('slack.bot.token') || !subscription) return;
 
     // try/catch
     try {
