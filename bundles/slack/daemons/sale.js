@@ -68,15 +68,34 @@ class SlackSaleDaemon extends Daemon {
     // try/catch
     try {
       // get models
-      const user    = await order.get('user');
-      const invoice = await order.get('invoice');
-      const payment = await Payment.where('invoice.id', invoice.get('_id').toString()).findOne();
+      const user      = await order.get('user');
+      const invoice   = await order.get('invoice');
+      const payment   = await Payment.where('invoice.id', invoice.get('_id').toString()).findOne();
+      const affiliate = await order.get('affiliate');
 
       // set initial fields
       const fields = [{
         title : 'When',
         value : order.get('created_at').toLocaleString(),
-      }, {
+      }];
+
+      // check affiliate
+      if (affiliate) {
+        // set user
+        let aff = await affiliate.get('user');
+        aff = Array.isArray(aff) ? aff[0] : aff;
+
+        // push affilate
+        if (aff) {
+          // push to fields
+          fields.push({
+            title : 'Affiliate',
+            value : `${aff.name() || aff.get('username') || aff.get('email')}`,
+          });
+        }
+      }
+
+      fields.push(...([{
         title : 'Name',
         value : user ? `${user.name() || user.get('username') || user.get('email')}` : order.get('address.name'),
       }, {
@@ -92,7 +111,7 @@ class SlackSaleDaemon extends Daemon {
         value : `${formatter.format((invoice.get('discount') || 0), {
           code : invoice.get('currency') || config.get('shop.currency') || 'USD',
         })} ${order.get('currency') || config.get('shop.currency') || 'USD'}`,
-      }];
+      }]));
 
       // push line items
       fields.push({
