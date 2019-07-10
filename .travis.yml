@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- '10'
+sudo: false
+install:
+- npm install --only=dev
+- npm ci
+before_script:
+- node node_modules/eslint/bin/eslint.js .
+script:
+- node ./edenconfig.js
+after_script:
+- npm test
+deploy:
+  provider: npm
+  email: alex@edenup.com
+  api_key:
+    secure: M56KePGxCk7N2CktUJfsnTzKadNfH9E9h58oYI/IxsHksDw1woK0W/By88+V9gwEK77aMqXukzIbU45WNMbRtlM9ymyC10E6aDjGrhFPkEIcUEAhmMUIz6XoPPpoweDbk7vS95EAiqBOZcKIBboOXDVTO9Crif0xCfH6VlvGctD8E6DaR4nUcZzLEUbD99qfYi6bJdxIMBgcIOmzoL/XPa0v2uRkSr4TcMMHAqby9ljrMbIX5mwgpBV1YKVetOtH3mjSlXT2bOIZDzJaNSdWWbzt6EXU8Ij9zH5mIkDvZjejmYdF1bnMwISCSDnOIR6AipZfuPgU0LbdI7w0nkrZdljW+Kay7shxCvrC2G+0XbRTuREDtijPMEhTN3oTgjL1St47gYLqmWOesf69XOIRC8HZqtixuzo4XafAsm+RuCSgtboohBWaSRkrdsGZmF4aUqoB64HxM76EM7GktKj74Elu7MWBtW3wr7608Qf3P7swtvWoKB3oXaNfU+nDp1bqJnVT8km+PwSncb5dKIf4t/naL0I7M4Iy5jWahCj5wTmfyKIdgoE9GaCVzI1l5YU0e36stxhKPcLS5YJjBtoW9UQlSxs0O7DvlzRI6rV6eLDns+2tdXO7rYr+BWo1YFIX4LtRYLBbnNt8twvaxYRtdAp3OhhOTiAe6lDqhDwzM3s=
+  on:
+    tags: true
+    repo: eden-js/shop-slack
