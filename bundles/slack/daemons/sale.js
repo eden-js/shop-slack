@@ -45,7 +45,7 @@ class SlackSaleDaemon extends Daemon {
     this.eden.on('subscription.requested', subscription => this.sendSubscription(subscription, 'Cancel Requested', '#ffc107'));
 
     // check thread
-    if (['back', 'stats'].includes(this.eden.cluster) && parseInt(this.eden.id) === 0) {
+    if (['back', 'stats'].includes(this.eden.cluster) && parseInt(this.eden.id, 10) === 0) {
       // send stats
       schedule.scheduleJob({
         hour   : 9,
@@ -141,7 +141,7 @@ class SlackSaleDaemon extends Daemon {
       slackHelper.channel(config.get('slack.sales.channel'), 'Order Completed', data);
     } catch (e) {
       // log error
-      console.log(e);
+      this.logger.log('error', e);
     }
   }
 
@@ -213,7 +213,7 @@ class SlackSaleDaemon extends Daemon {
       slackHelper.channel(config.get('slack.sales.channel') || config.get('slack.subscription.channel'), `Subscription ${type}`, data);
     } catch (e) {
       // log error
-      console.log(e);
+      this.logger.log('error', e);
     }
   }
 
@@ -238,14 +238,13 @@ class SlackSaleDaemon extends Daemon {
     await this.eden.hook('shop.stats.send', stats);
 
     // loop stats
-    for (const stat in stats) {
+    Object.keys(stats).forEach((stat) => {
       // set fields
       const fields = [];
 
       // loop keys in count
-      for (const key in stats[stat].count) { // eslint-disable-guard-for-in
+      Object.keys(stats[stat].count).forEach((key) => {
         // set value
-        const count = stats[stat].count[key];
         const money = (stats[stat].money || {})[key];
 
         // create field
@@ -256,7 +255,7 @@ class SlackSaleDaemon extends Daemon {
           })}` : ''}`,
           short : true,
         });
-      }
+      });
 
       // set data
       attachments.push({
@@ -264,7 +263,7 @@ class SlackSaleDaemon extends Daemon {
         color : '#28a745',
         title : stats[stat].title,
       });
-    }
+    });
 
     // create post
     const data = {
